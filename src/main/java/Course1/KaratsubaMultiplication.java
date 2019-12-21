@@ -23,11 +23,13 @@ public class KaratsubaMultiplication {
 
         BigInteger powOfTen = BigInteger.TEN.pow(Math.max(length1, length2) / 2);
 
-        // num1 is divided as num = (a * powOfTen) + b
+        /*
+            Divide and conquer
+            num1 is divided as num = (a * powOfTen) + b
+            num2 is divided as num = (c * powOfTen) + d
+        */
         BigInteger a = num1.divide(powOfTen);
         BigInteger b = num1.mod(powOfTen);
-
-        // num2 is divided as num = (c * powOfTen) + d
         BigInteger c = num2.divide(powOfTen);
         BigInteger d = num2.mod(powOfTen);
 
