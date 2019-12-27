@@ -1,8 +1,9 @@
+package Helpers;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class HelperFunctions {
-
+public class GeneralHelpers {
     public static InputStream readFileAsStream(String filePath) throws FileNotFoundException {
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
         if (inputStream == null) {

@@ -1,4 +1,5 @@
 import Course1.*;
+import Helpers.GeneralHelpers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ public class Course1Tests {
 
     @Test
     public void karatsubaMultiplicationTest() throws FileNotFoundException {
-        InputStream inputStream = HelperFunctions.readFileAsStream("Course1TestResources/KaratsubaMultiplicationInput.txt");
+        InputStream inputStream = GeneralHelpers.readFileAsStream("Course1TestResources/KaratsubaMultiplicationInput.txt");
         Scanner in = new Scanner(inputStream);
         KaratsubaMultiplication multiplication = new KaratsubaMultiplication();
 
@@ -27,7 +28,7 @@ public class Course1Tests {
 
     @Test
     public void countInversionsTest() throws FileNotFoundException {
-        InputStream inputStream = HelperFunctions.readFileAsStream("Course1TestResources/CountInversionsTest.txt");
+        InputStream inputStream = GeneralHelpers.readFileAsStream("Course1TestResources/CountInversionsTest.txt");
         Scanner in = new Scanner(inputStream);
         CountInversions countInversions = new CountInversions();
 
@@ -77,11 +78,16 @@ public class Course1Tests {
         arr = getSmallArray();
         quickSort.sortArray(arr);
         Assert.assertArrayEquals(expected, arr);
+
+        quickSort.setPivotType(PivotType.Random);
+        arr = getSmallArray();
+        quickSort.sortArray(arr);
+        Assert.assertArrayEquals(expected, arr);
     }
 
     @Test
     public void QuickSortTest2() throws FileNotFoundException {
-        InputStream inputStream = HelperFunctions.readFileAsStream("Course1TestResources/QuickSortTest.txt");
+        InputStream inputStream = GeneralHelpers.readFileAsStream("Course1TestResources/QuickSortTest.txt");
         Scanner in = new Scanner(inputStream);
 
         List<Integer> numbers = new ArrayList<>();
@@ -92,22 +98,52 @@ public class Course1Tests {
         int[] arr;
 
         QuickSort quickSort = new QuickSort(PivotType.FirstElement);
-        arr = getLargeArray(numbers);
+        arr = getLargeArrayForSorting(numbers);
         quickSort.sortArray(arr);
         Assert.assertEquals(162085, quickSort.getComparisonCount());
 
         quickSort.setPivotType(PivotType.LastElement);
-        arr = getLargeArray(numbers);
+        arr = getLargeArrayForSorting(numbers);
         quickSort.sortArray(arr);
         Assert.assertEquals(164123, quickSort.getComparisonCount());
 
         quickSort.setPivotType(PivotType.MedianOfThree);
-        arr = getLargeArray(numbers);
+        arr = getLargeArrayForSorting(numbers);
         quickSort.sortArray(arr);
         Assert.assertEquals(138382, quickSort.getComparisonCount());
     }
 
-    private int[] getLargeArray(List<Integer> numbers) {
+    @Test
+    public void RandomizedSelectionTest() {
+        LinearTimeSelection selection = new LinearTimeSelection();
+        int[] arr;
+        int actual;
+
+        arr = getSmallArray();
+        actual = selection.randomizedSelection(arr, 3);
+        Assert.assertEquals(4, actual);
+
+        arr = getSmallArray();
+        actual = selection.randomizedSelection(arr, 6);
+        Assert.assertEquals(7, actual);
+    }
+
+    @Test
+    public void DeterministicSelectionTest() {
+        LinearTimeSelection selection = new LinearTimeSelection();
+        int[] arr;
+        int actual;
+
+        arr = getSmallArray();
+        actual = selection.deterministicSelection(arr, 3);
+        Assert.assertEquals(4, actual);
+
+        arr = getSmallArray();
+        actual = selection.deterministicSelection(arr, 6);
+        Assert.assertEquals(7, actual);
+    }
+
+    private int[] getLargeArrayForSorting(List<Integer> numbers) {
         return numbers.stream().mapToInt(i -> i).toArray();
     }
 

@@ -1,15 +1,24 @@
 package Course1;
 
+import Helpers.RandomizedHelpers;
+
 public class QuickSort {
 
     private PivotType pivotType;
     private int comparisonCount;
+    private RandomizedHelpers helpers;
+
+    public QuickSort() {
+        this(PivotType.Random);
+    }
 
     public QuickSort(PivotType pivotType) {
         this.pivotType = pivotType;
         this.comparisonCount = 0;
+        this.helpers = new RandomizedHelpers();
     }
 
+    // average runtime - O(n), worst case runtime -  O(n^2)
     public void sortArray(int[] arr) {
         this.comparisonCount = 0;
 
@@ -26,13 +35,13 @@ public class QuickSort {
     }
 
     private void processInput(int[] arr, int start, int end) {
-        if(start >= end) {
+        if (start >= end) {
             return;
         }
         this.comparisonCount += (end - start);
 
         int pivot = getPivot(arr, start, end);
-        pivot = partition(arr, start, end, pivot);
+        pivot = helpers.partition(arr, start, end, pivot);
         processInput(arr, start, pivot - 1);
         processInput(arr, pivot + 1, end);
     }
@@ -49,37 +58,17 @@ public class QuickSort {
                 int endVal = arr[end];
                 int midVal = arr[middleIndex];
 
-                if((startVal < endVal && startVal > midVal) || (startVal < midVal && startVal > endVal)) {
+                if ((startVal < endVal && startVal > midVal) || (startVal < midVal && startVal > endVal)) {
                     return start;
                 } else if ((endVal < startVal && endVal > midVal) || (endVal < midVal && endVal > startVal)) {
                     return end;
                 } else {
                     return middleIndex;
                 }
+            case Random:
+                return helpers.getRandomBetweenNumbers(start, end);
             default:
                 return middleIndex;
         }
-    }
-
-    private int partition(int[] arr, int start, int end, int pivot) {
-        swap(arr, start, pivot);
-
-        int i = start + 1;
-
-        for(int j = start + 1; j <= end; j++) {
-            if(arr[j] < arr[start]) {
-                swap(arr, i, j);
-                i++;
-            }
-        }
-
-        swap(arr, start, i - 1);
-        return i - 1;
-    }
-
-    private void swap(int[] arr, int index1, int index2) {
-        int temp = arr[index1];
-        arr[index1] = arr[index2];
-        arr[index2] = temp;
     }
 }
