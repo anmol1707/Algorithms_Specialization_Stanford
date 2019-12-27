@@ -1,6 +1,4 @@
-import Course1.CountInversions;
-import Course1.KaratsubaMultiplication;
-import Course1.MatrixMultiplication;
+import Course1.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,12 +36,14 @@ public class Course1Tests {
             numbers.add(in.nextInt());
         }
 
+        long expectedInversions = 2407905288L;
+
         int[] arr = numbers.stream().mapToInt(i -> i).toArray();
-        Assert.assertEquals(2407905288L, countInversions.countInversionsFast(arr));
+        Assert.assertEquals(expectedInversions, countInversions.countInversionsFast(arr));
 
         // to avoid referencing issues as countInversionsFast sorts the array while counting inversions
         arr = numbers.stream().mapToInt(i -> i).toArray();
-        Assert.assertEquals(2407905288L, countInversions.countInversionsSlow(arr));
+        Assert.assertEquals(expectedInversions, countInversions.countInversionsSlow(arr));
     }
 
     @Test
@@ -56,5 +56,62 @@ public class Course1Tests {
         MatrixMultiplication matrixMultiplication = new MatrixMultiplication();
         Assert.assertArrayEquals(expectedResult, matrixMultiplication.matrixMultiplicationSlow(arr1, arr2));
         Assert.assertArrayEquals(expectedResult, matrixMultiplication.strassenMatrixMultiplication(arr1, arr2));
+    }
+
+    @Test
+    public void QuickSortTest1() {
+        int[] expected = {1, 2, 3, 4, 5, 6, 7, 8};
+        int[] arr;
+
+        QuickSort quickSort = new QuickSort(PivotType.FirstElement);
+        arr = getSmallArray();
+        quickSort.sortArray(arr);
+        Assert.assertArrayEquals(expected, arr);
+
+        quickSort.setPivotType(PivotType.LastElement);
+        arr = getSmallArray();
+        quickSort.sortArray(arr);
+        Assert.assertArrayEquals(expected, arr);
+
+        quickSort.setPivotType(PivotType.MedianOfThree);
+        arr = getSmallArray();
+        quickSort.sortArray(arr);
+        Assert.assertArrayEquals(expected, arr);
+    }
+
+    @Test
+    public void QuickSortTest2() throws FileNotFoundException {
+        InputStream inputStream = HelperFunctions.readFileAsStream("Course1TestResources/QuickSortTest.txt");
+        Scanner in = new Scanner(inputStream);
+
+        List<Integer> numbers = new ArrayList<>();
+        while (in.hasNextInt()) {
+            numbers.add(in.nextInt());
+        }
+
+        int[] arr;
+
+        QuickSort quickSort = new QuickSort(PivotType.FirstElement);
+        arr = getLargeArray(numbers);
+        quickSort.sortArray(arr);
+        Assert.assertEquals(162085, quickSort.getComparisonCount());
+
+        quickSort.setPivotType(PivotType.LastElement);
+        arr = getLargeArray(numbers);
+        quickSort.sortArray(arr);
+        Assert.assertEquals(164123, quickSort.getComparisonCount());
+
+        quickSort.setPivotType(PivotType.MedianOfThree);
+        arr = getLargeArray(numbers);
+        quickSort.sortArray(arr);
+        Assert.assertEquals(138382, quickSort.getComparisonCount());
+    }
+
+    private int[] getLargeArray(List<Integer> numbers) {
+        return numbers.stream().mapToInt(i -> i).toArray();
+    }
+
+    private int[] getSmallArray() {
+        return new int[]{3, 8, 2, 5, 1, 4, 7, 6};
     }
 }
