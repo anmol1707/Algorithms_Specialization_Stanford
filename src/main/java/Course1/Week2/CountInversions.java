@@ -1,4 +1,6 @@
-package Course1;
+package Course1.Week2;
+
+import Helpers.GeneralHelpers;
 
 public class CountInversions {
 
@@ -7,9 +9,9 @@ public class CountInversions {
         int length = arr.length;
         long result = 0L;
 
-        for(int i = 0; i < length; i++) {
-            for(int j = i + 1; j < length; j++) {
-                if(arr[i] > arr[j]) {
+        for (int i = 0; i < length; i++) {
+            for (int j = i + 1; j < length; j++) {
+                if (arr[i] > arr[j]) {
                     result++;
                 }
             }
@@ -24,7 +26,7 @@ public class CountInversions {
 
     // runtime - O(n.log(n))
     private long processInputFast(int[] arr, int start, int end) {
-        if(start >= end) {
+        if (start >= end) {
             return 0;
         }
 
@@ -35,15 +37,8 @@ public class CountInversions {
         // count all inversions present strictly in the right half
         long val2 = processInputFast(arr, middle + 1, end);
 
-        int[] leftArr = new int[middle - start + 1];
-        int[] rightArr = new int[end - middle];
-
-        for(int i = start; i <= middle; i++) {
-            leftArr[i - start] = arr[i];
-        }
-        for(int i = middle + 1; i <= end; i++) {
-            rightArr[i - (middle + 1)] = arr[i];
-        }
+        int[] leftArr = GeneralHelpers.copyElements(arr, start, middle);
+        int[] rightArr = GeneralHelpers.copyElements(arr, middle + 1, end);
 
         // count all inversions split between left and right halves
         long val3 = mergeAndCount(arr, leftArr, rightArr, start);
@@ -54,8 +49,8 @@ public class CountInversions {
         int x = 0, y = 0, z = start;
         long result = 0L;
 
-        while(x < leftArr.length && y < rightArr.length) {
-            if(leftArr[x] <= rightArr[y]) {
+        while (x < leftArr.length && y < rightArr.length) {
+            if (leftArr[x] <= rightArr[y]) {
                 arr[z] = leftArr[x++];
             } else {
                 arr[z] = rightArr[y++];
@@ -64,11 +59,11 @@ public class CountInversions {
             z++;
         }
 
-        while(x < leftArr.length) {
+        while (x < leftArr.length) {
             arr[z++] = leftArr[x++];
         }
 
-        while(y < rightArr.length) {
+        while (y < rightArr.length) {
             arr[z++] = rightArr[y++];
         }
 
@@ -76,7 +71,7 @@ public class CountInversions {
     }
 
     public static void main(String[] args) {
-        int[] arr = {5,1,3,2,4,6};
+        int[] arr = {5, 1, 3, 2, 4, 6};
 
         CountInversions countInversions = new CountInversions();
         System.out.println(countInversions.countInversionsFast(arr));

@@ -1,4 +1,4 @@
-package Course1;
+package Course1.Week4;
 
 import Helpers.RandomizedHelpers;
 

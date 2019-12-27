@@ -1,6 +1,6 @@
 package Helpers;
 
-import Course1.ContractedVertex;
+import Course1.Week4.ContractedVertex;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -53,5 +53,13 @@ public class GeneralHelpers {
         }
 
         return adjacencyList;
+    }
+
+    public static int[] copyElements(int[] arr, int start, int end) {
+        int[] result = new int[end - start + 1];
+        for (int i = start; i <= end; i++) {
+            result[i - start] = arr[i];
+        }
+        return result;
     }
 }

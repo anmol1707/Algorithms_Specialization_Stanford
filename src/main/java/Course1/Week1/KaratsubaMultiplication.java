@@ -1,4 +1,4 @@
-package Course1;
+package Course1.Week1;
 
 import java.math.BigInteger;
 import java.util.Scanner;

@@ -1,4 +1,12 @@
-import Course1.*;
+import Course1.Week1.KaratsubaMultiplication;
+import Course1.Week1.MergeSort;
+import Course1.Week2.CountInversions;
+import Course1.Week2.MatrixMultiplication;
+import Course1.Week3.PivotType;
+import Course1.Week3.QuickSort;
+import Course1.Week4.ContractedVertex;
+import Course1.Week4.KargerRandomContraction;
+import Course1.Week4.LinearTimeSelection;
 import Helpers.GeneralHelpers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,6 +34,17 @@ public class Course1Tests {
             BigInteger result = multiplication.doKaratsuba(input[0], input[1]);
             Assert.assertEquals(input[2], result.toString());
         }
+    }
+
+    @Test
+    public void mergeSortTest() {
+        int[] expected = {1, 2, 3, 4, 5, 6, 7, 8};
+        int[] arr = getSmallArray();
+
+        MergeSort mergeSort = new MergeSort();
+        mergeSort.sortArray(arr);
+
+        Assert.assertArrayEquals(expected, arr);
     }
 
     @Test
