@@ -6,9 +6,11 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Course1Tests {
 
@@ -28,16 +30,10 @@ public class Course1Tests {
 
     @Test
     public void countInversionsTest() throws FileNotFoundException {
-        InputStream inputStream = GeneralHelpers.readFileAsStream("Course1TestResources/CountInversionsTest.txt");
-        Scanner in = new Scanner(inputStream);
-        CountInversions countInversions = new CountInversions();
-
-        List<Integer> numbers = new ArrayList<>();
-        while (in.hasNextInt()) {
-            numbers.add(in.nextInt());
-        }
-
+        List<Integer> numbers = GeneralHelpers.readArrayFromFile("Course1TestResources/CountInversionsTest.txt");
         long expectedInversions = 2407905288L;
+
+        CountInversions countInversions = new CountInversions();
 
         int[] arr = numbers.stream().mapToInt(i -> i).toArray();
         Assert.assertEquals(expectedInversions, countInversions.countInversionsFast(arr));
@@ -87,14 +83,7 @@ public class Course1Tests {
 
     @Test
     public void QuickSortTest2() throws FileNotFoundException {
-        InputStream inputStream = GeneralHelpers.readFileAsStream("Course1TestResources/QuickSortTest.txt");
-        Scanner in = new Scanner(inputStream);
-
-        List<Integer> numbers = new ArrayList<>();
-        while (in.hasNextInt()) {
-            numbers.add(in.nextInt());
-        }
-
+        List<Integer> numbers = GeneralHelpers.readArrayFromFile("Course1TestResources/QuickSortTest.txt");
         int[] arr;
 
         QuickSort quickSort = new QuickSort(PivotType.FirstElement);
@@ -141,6 +130,68 @@ public class Course1Tests {
         arr = getSmallArray();
         actual = selection.deterministicSelection(arr, 6);
         Assert.assertEquals(7, actual);
+    }
+
+    @Test
+    public void KargerRandomContractionTest1() throws FileNotFoundException {
+        int minCuts = Integer.MAX_VALUE;
+        Map<ContractedVertex, List<ContractedVertex>> adjacencyList = GeneralHelpers.readGraphFromFile("Course1TestResources/KargerRandomContractionTest1.txt");
+        for (int i = 0; i < 100; i++) {
+            Map<ContractedVertex, List<ContractedVertex>> duplicateAdjacencyList = duplicateAdjacencyList(adjacencyList);
+            KargerRandomContraction randomContraction = new KargerRandomContraction(duplicateAdjacencyList);
+            int cuts = randomContraction.getMinimumCut();
+            minCuts = Math.min(minCuts, cuts);
+        }
+        Assert.assertEquals(2, minCuts);
+    }
+
+    @Test
+    public void KargerRandomContractionTest2() throws FileNotFoundException, InterruptedException {
+        AtomicInteger minCuts = new AtomicInteger(Integer.MAX_VALUE);
+        final Map<ContractedVertex, List<ContractedVertex>> adjacencyList = GeneralHelpers.readGraphFromFile("Course1TestResources/KargerRandomContractionTest2.txt");
+        final int numberOfProcessors = Runtime.getRuntime().availableProcessors();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfProcessors);
+
+        for (int i = 0; i < numberOfProcessors * 10; i++) {
+            executorService.execute(() -> {
+                Map<ContractedVertex, List<ContractedVertex>> duplicateAdjacencyList = duplicateAdjacencyList(adjacencyList);
+                KargerRandomContraction randomContraction = new KargerRandomContraction(duplicateAdjacencyList);
+                int cuts = randomContraction.getMinimumCut();
+                minCuts.set(Math.min(minCuts.get(), cuts));
+            });
+        }
+
+        executorService.shutdown();
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+
+        Assert.assertEquals(17, minCuts.get());
+    }
+
+    private Map<ContractedVertex, List<ContractedVertex>> duplicateAdjacencyList(Map<ContractedVertex, List<ContractedVertex>> adjacencyList) {
+        Map<ContractedVertex, List<ContractedVertex>> duplicateAdjacencyList = new HashMap<>();
+        for (ContractedVertex vertex : adjacencyList.keySet()) {
+            List<ContractedVertex> connections = adjacencyList.get(vertex);
+
+            ContractedVertex dupVertex = duplicateVertex(vertex);
+            List<ContractedVertex> dupConnections = duplicateConnections(connections);
+            duplicateAdjacencyList.put(dupVertex, dupConnections);
+        }
+        return duplicateAdjacencyList;
+    }
+
+    private List<ContractedVertex> duplicateConnections(List<ContractedVertex> connections) {
+        List<ContractedVertex> dupConnections = new ArrayList<>();
+        for (ContractedVertex connection : connections) {
+            dupConnections.add(duplicateVertex(connection));
+        }
+        return dupConnections;
+    }
+
+    private ContractedVertex duplicateVertex(ContractedVertex originalVertex) {
+        ContractedVertex dupVertex = new ContractedVertex();
+        dupVertex.addVertices(originalVertex.getVertices());
+        return dupVertex;
     }
 
     private int[] getLargeArrayForSorting(List<Integer> numbers) {
