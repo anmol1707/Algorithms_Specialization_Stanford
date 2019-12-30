@@ -27,7 +27,7 @@ public class GeneralHelpers {
         return numbers;
     }
 
-    public static Map<ContractedVertex, List<ContractedVertex>> readGraphFromFile(String filePath) throws FileNotFoundException {
+    public static Map<ContractedVertex, List<ContractedVertex>> readGraphFromFileAdvanced(String filePath) throws FileNotFoundException {
         InputStream inputStream = readFileAsStream(filePath);
         Scanner in = new Scanner(inputStream);
 
@@ -53,6 +53,26 @@ public class GeneralHelpers {
         }
 
         return adjacencyList;
+    }
+
+    public static Map<Integer, List<Integer>> readGraphFromFileBasic(String filePath) throws FileNotFoundException {
+        InputStream inputStream = readFileAsStream(filePath);
+        Scanner in = new Scanner(inputStream);
+        String input;
+        String[] vertices;
+        int start, end;
+
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        while(in.hasNextLine()) {
+            input = in.nextLine();
+            vertices = input.split(" ");
+            start = Integer.parseInt(vertices[0]);
+            end = Integer.parseInt(vertices[1]);
+            graph.putIfAbsent(start, new ArrayList<>());
+            graph.get(start).add(end);
+        }
+
+        return graph;
     }
 
     public static int[] copyElements(int[] arr, int start, int end) {

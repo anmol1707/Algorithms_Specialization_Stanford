@@ -154,7 +154,7 @@ public class Course1Tests {
     @Test
     public void KargerRandomContractionTest1() throws FileNotFoundException {
         int minCuts = Integer.MAX_VALUE;
-        Map<ContractedVertex, List<ContractedVertex>> adjacencyList = GeneralHelpers.readGraphFromFile("Course1TestResources/KargerRandomContractionTest1.txt");
+        Map<ContractedVertex, List<ContractedVertex>> adjacencyList = GeneralHelpers.readGraphFromFileAdvanced("Course1TestResources/KargerRandomContractionTest1.txt");
         for (int i = 0; i < 100; i++) {
             Map<ContractedVertex, List<ContractedVertex>> duplicateAdjacencyList = duplicateAdjacencyList(adjacencyList);
             KargerRandomContraction randomContraction = new KargerRandomContraction(duplicateAdjacencyList);
@@ -167,7 +167,7 @@ public class Course1Tests {
     @Test
     public void KargerRandomContractionTest2() throws FileNotFoundException, InterruptedException {
         AtomicInteger minCuts = new AtomicInteger(Integer.MAX_VALUE);
-        final Map<ContractedVertex, List<ContractedVertex>> adjacencyList = GeneralHelpers.readGraphFromFile("Course1TestResources/KargerRandomContractionTest2.txt");
+        final Map<ContractedVertex, List<ContractedVertex>> adjacencyList = GeneralHelpers.readGraphFromFileAdvanced("Course1TestResources/KargerRandomContractionTest2.txt");
         final int numberOfProcessors = Runtime.getRuntime().availableProcessors();
 
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfProcessors);
