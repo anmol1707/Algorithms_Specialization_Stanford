@@ -10,15 +10,15 @@ public class Dijkstras {
     }
 
     public Map<Integer, Integer> findShortestPath(Map<Integer, List<WeightedDestination>> graph, Integer startVertex) {
-        Map<Integer, Integer> shortestPaths = new HashMap<>();
-        int totalVertices = initializeResult(graph, shortestPaths);
+        Map<Integer, Integer> shortestPaths = initializeResult(graph);
+        int reachableVertexCount = findVerticesReachableCount(graph, startVertex);
 
         Set<Integer> processed = new HashSet<>();
         PriorityQueue<WeightedDestination> minHeap = new PriorityQueue<>(Comparator.comparingInt(WeightedDestination::getWeight));
 
         minHeap.add(new WeightedDestination(startVertex, 0));
 
-        while(processed.size() != totalVertices && !minHeap.isEmpty()) {
+        while(processed.size() != reachableVertexCount) {
             WeightedDestination path = minHeap.poll();
             if(processed.contains(path.getVertexId())) {
                 continue;
@@ -36,17 +36,36 @@ public class Dijkstras {
         return shortestPaths;
     }
 
-    private int initializeResult(Map<Integer, List<WeightedDestination>> graph, Map<Integer, Integer> shortestPaths) {
-        Set<Integer> allVertices = new HashSet<>();
-        for (Integer startVertex : graph.keySet()) {
-            shortestPaths.putIfAbsent(startVertex, defaultDistance);
-
-            allVertices.add(startVertex);
-            List<WeightedDestination> edges = graph.get(startVertex);
-            for (WeightedDestination edge : edges) {
-                allVertices.add(edge.getVertexId());
-            }
+    private Map<Integer, Integer> initializeResult(Map<Integer, List<WeightedDestination>> graph) {
+        Map<Integer, Integer> initialResult = new HashMap<>();
+        for (Integer endVertex : graph.keySet()) {
+            initialResult.putIfAbsent(endVertex, defaultDistance);
         }
-        return allVertices.size();
+        return initialResult;
+    }
+
+    private int findVerticesReachableCount(Map<Integer, List<WeightedDestination>> graph, Integer startVertex) {
+        Set<Integer> visited = new HashSet<>();
+        Stack<Integer> toVisit = new Stack<>();
+        int result = 0;
+
+        toVisit.add(startVertex);
+
+        while(!toVisit.empty()) {
+            Integer vertex = toVisit.pop();
+            if(visited.contains(vertex)) {
+                continue;
+            }
+            List<WeightedDestination> edges = graph.getOrDefault(vertex, new ArrayList<>());
+            for (WeightedDestination edge : edges) {
+                if(!visited.contains(edge.getVertexId())) {
+                    toVisit.push(edge.getVertexId());
+                }
+            }
+            visited.add(vertex);
+            result++;
+        }
+
+        return result;
     }
 }
