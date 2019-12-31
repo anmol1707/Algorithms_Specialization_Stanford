@@ -1,6 +1,7 @@
 package Helpers;
 
 import Course1.Week4.ContractedVertex;
+import Course2.Week2.WeightedDestination;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -27,7 +28,7 @@ public class GeneralHelpers {
         return numbers;
     }
 
-    public static Map<ContractedVertex, List<ContractedVertex>> readGraphFromFileAdvanced(String filePath) throws FileNotFoundException {
+    public static Map<ContractedVertex, List<ContractedVertex>> readAdvancedDirectedGraphFromFile(String filePath) throws FileNotFoundException {
         InputStream inputStream = readFileAsStream(filePath);
         Scanner in = new Scanner(inputStream);
 
@@ -55,21 +56,47 @@ public class GeneralHelpers {
         return adjacencyList;
     }
 
-    public static Map<Integer, List<Integer>> readGraphFromFileBasic(String filePath) throws FileNotFoundException {
+    public static Map<Integer, List<Integer>> readBasicDirectedGraphFromFile(String filePath) throws FileNotFoundException {
         InputStream inputStream = readFileAsStream(filePath);
         Scanner in = new Scanner(inputStream);
         String input;
         String[] vertices;
-        int start, end;
+        int startVertex, endVertex;
 
         Map<Integer, List<Integer>> graph = new HashMap<>();
         while(in.hasNextLine()) {
             input = in.nextLine();
             vertices = input.split(" ");
-            start = Integer.parseInt(vertices[0]);
-            end = Integer.parseInt(vertices[1]);
-            graph.putIfAbsent(start, new ArrayList<>());
-            graph.get(start).add(end);
+            startVertex = Integer.parseInt(vertices[0]);
+            endVertex = Integer.parseInt(vertices[1]);
+            graph.putIfAbsent(startVertex, new ArrayList<>());
+            graph.get(startVertex).add(endVertex);
+        }
+
+        return graph;
+    }
+
+    public static Map<Integer, List<WeightedDestination>> readWeightedUndirectedGraphFromFile(String filePath) throws FileNotFoundException {
+        InputStream inputStream = readFileAsStream(filePath);
+        Scanner in = new Scanner(inputStream);
+        String input;
+        String[] lineData, edgeData;
+        int startVertex, endVertex, weight, length;
+
+        Map<Integer, List<WeightedDestination>> graph = new HashMap<>();
+
+        while(in.hasNextLine()) {
+            input = in.nextLine();
+            lineData = input.split("\\s+");
+            startVertex = Integer.parseInt(lineData[0]);
+            graph.putIfAbsent(startVertex, new ArrayList<>());
+            length = lineData.length;
+            for(int i = 1; i < length; i++) {
+                edgeData = lineData[i].split(",");
+                endVertex = Integer.parseInt(edgeData[0]);
+                weight = Integer.parseInt(edgeData[1]);
+                graph.get(startVertex).add(new WeightedDestination(endVertex, weight));
+            }
         }
 
         return graph;
