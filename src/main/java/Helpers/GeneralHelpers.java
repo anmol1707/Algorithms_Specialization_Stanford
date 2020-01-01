@@ -109,4 +109,12 @@ public class GeneralHelpers {
         }
         return result;
     }
+
+    public static int[] getLargeArrayForSorting(List<Integer> numbers) {
+        return numbers.stream().mapToInt(i -> i).toArray();
+    }
+
+    public static int[] getSmallArray() {
+        return new int[]{3, 8, 2, 5, 1, 4, 7, 6};
+    }
 }

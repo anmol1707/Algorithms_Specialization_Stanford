@@ -1,11 +1,13 @@
 import Course2.Week1.StronglyConnectedComponents;
 import Course2.Week2.Dijkstras;
 import Course2.Week2.WeightedDestination;
+import Course2.Week3.MedianMaintenance;
 import Helpers.GeneralHelpers;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
 
 public class Course2Tests {
@@ -34,7 +36,7 @@ public class Course2Tests {
 
     @Test
     public void dijkstrasTest() throws FileNotFoundException {
-        Map<Integer, List<WeightedDestination>> graph = GeneralHelpers.readWeightedUndirectedGraphFromFile("Course2TestResources/dijkstraData.txt");
+        Map<Integer, List<WeightedDestination>> graph = GeneralHelpers.readWeightedUndirectedGraphFromFile("Course2TestResources/DijkstraData.txt");
         final int startVertex = 1;
         Dijkstras dijkstras = new Dijkstras();
         Map<Integer, Integer> shortestPaths = dijkstras.findShortestPath(graph, startVertex);
@@ -42,6 +44,24 @@ public class Course2Tests {
         String expectedResult = "2599,2610,2947,2052,2367,2399,2029,2442,2505,3068";
         String actualResult = dijkstrasResultToString(shortestPaths);
         Assert.assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void medianMaintenanceTest() throws FileNotFoundException {
+        InputStream inputStream = GeneralHelpers.readFileAsStream("Course2TestResources/MedianInputData.txt");
+        MedianMaintenance medianMaintenance = new MedianMaintenance();
+        List<Integer> medians = medianMaintenance.getMedians(inputStream);
+        int actualSum = sumOfMedians(medians, 10000);
+        int expectedSum = 1213;
+        Assert.assertEquals(expectedSum, actualSum);
+    }
+
+    private int sumOfMedians(List<Integer> medians, int mod) {
+        int sum = 0;
+        for (Integer median : medians) {
+            sum = (sum + median) % mod;
+        }
+        return sum;
     }
 
     private String sccResultToString(List<List<Integer>> connectedComponents) {

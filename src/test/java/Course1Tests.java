@@ -39,7 +39,7 @@ public class Course1Tests {
     @Test
     public void mergeSortTest() {
         int[] expected = {1, 2, 3, 4, 5, 6, 7, 8};
-        int[] arr = getSmallArray();
+        int[] arr = GeneralHelpers.getSmallArray();
 
         MergeSort mergeSort = new MergeSort();
         mergeSort.sortArray(arr);
@@ -80,22 +80,22 @@ public class Course1Tests {
         int[] arr;
 
         QuickSort quickSort = new QuickSort(PivotType.FirstElement);
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         quickSort.sortArray(arr);
         Assert.assertArrayEquals(expected, arr);
 
         quickSort.setPivotType(PivotType.LastElement);
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         quickSort.sortArray(arr);
         Assert.assertArrayEquals(expected, arr);
 
         quickSort.setPivotType(PivotType.MedianOfThree);
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         quickSort.sortArray(arr);
         Assert.assertArrayEquals(expected, arr);
 
         quickSort.setPivotType(PivotType.Random);
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         quickSort.sortArray(arr);
         Assert.assertArrayEquals(expected, arr);
     }
@@ -106,17 +106,17 @@ public class Course1Tests {
         int[] arr;
 
         QuickSort quickSort = new QuickSort(PivotType.FirstElement);
-        arr = getLargeArrayForSorting(numbers);
+        arr = GeneralHelpers.getLargeArrayForSorting(numbers);
         quickSort.sortArray(arr);
         Assert.assertEquals(162085, quickSort.getComparisonCount());
 
         quickSort.setPivotType(PivotType.LastElement);
-        arr = getLargeArrayForSorting(numbers);
+        arr = GeneralHelpers.getLargeArrayForSorting(numbers);
         quickSort.sortArray(arr);
         Assert.assertEquals(164123, quickSort.getComparisonCount());
 
         quickSort.setPivotType(PivotType.MedianOfThree);
-        arr = getLargeArrayForSorting(numbers);
+        arr = GeneralHelpers.getLargeArrayForSorting(numbers);
         quickSort.sortArray(arr);
         Assert.assertEquals(138382, quickSort.getComparisonCount());
     }
@@ -127,11 +127,11 @@ public class Course1Tests {
         int[] arr;
         int actual;
 
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         actual = selection.randomizedSelection(arr, 3);
         Assert.assertEquals(4, actual);
 
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         actual = selection.randomizedSelection(arr, 6);
         Assert.assertEquals(7, actual);
     }
@@ -142,11 +142,11 @@ public class Course1Tests {
         int[] arr;
         int actual;
 
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         actual = selection.deterministicSelection(arr, 3);
         Assert.assertEquals(4, actual);
 
-        arr = getSmallArray();
+        arr = GeneralHelpers.getSmallArray();
         actual = selection.deterministicSelection(arr, 6);
         Assert.assertEquals(7, actual);
     }
@@ -211,13 +211,5 @@ public class Course1Tests {
         ContractedVertex dupVertex = new ContractedVertex();
         dupVertex.addVertices(originalVertex.getVertices());
         return dupVertex;
-    }
-
-    private int[] getLargeArrayForSorting(List<Integer> numbers) {
-        return numbers.stream().mapToInt(i -> i).toArray();
-    }
-
-    private int[] getSmallArray() {
-        return new int[]{3, 8, 2, 5, 1, 4, 7, 6};
     }
 }
