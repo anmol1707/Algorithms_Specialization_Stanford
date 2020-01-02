@@ -2,6 +2,7 @@ import Course2.Week1.StronglyConnectedComponents;
 import Course2.Week2.Dijkstras;
 import Course2.Week2.WeightedDestination;
 import Course2.Week3.MedianMaintenance;
+import Course2.Week4.TwoSum;
 import Helpers.GeneralHelpers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,6 +55,16 @@ public class Course2Tests {
         int actualSum = sumOfMedians(medians, 10000);
         int expectedSum = 1213;
         Assert.assertEquals(expectedSum, actualSum);
+    }
+
+    @Test
+    public void twoSumTest() throws FileNotFoundException, InterruptedException {
+        Map<Long, Integer> freqMap = GeneralHelpers.readArrayAsFreqMapFromFile("Course2TestResources/TwoSumInput.txt");
+        TwoSum twoSum = new TwoSum();
+        int expectedResult = 427;
+        int actualResult = twoSum.getTargetCount(freqMap);
+
+        Assert.assertEquals(expectedResult, actualResult);
     }
 
     private int sumOfMedians(List<Integer> medians, int mod) {

@@ -28,6 +28,19 @@ public class GeneralHelpers {
         return numbers;
     }
 
+    public static Map<Long, Integer> readArrayAsFreqMapFromFile(String filePath) throws FileNotFoundException {
+        InputStream inputStream = readFileAsStream(filePath);
+        Scanner in = new Scanner(inputStream);
+
+        Map<Long, Integer> freqMap = new HashMap<>();
+        while (in.hasNextLong()) {
+            Long number = in.nextLong();
+            freqMap.put(number, freqMap.getOrDefault(number, 0) + 1);
+        }
+
+        return freqMap;
+    }
+
     public static Map<ContractedVertex, List<ContractedVertex>> readAdvancedDirectedGraphFromFile(String filePath) throws FileNotFoundException {
         InputStream inputStream = readFileAsStream(filePath);
         Scanner in = new Scanner(inputStream);
